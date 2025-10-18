@@ -207,10 +207,13 @@ class UIManager {
         // Keeping function for compatibility but doing nothing
     }
 
-    showFeedback(isCorrect, message) {
+    showFeedback(isCorrect, message, terminalOutput) {
         // Remove any existing feedback
         const existing = this.challengeModal.querySelector('.feedback-message');
         if (existing) existing.remove();
+        
+        const existing2 = this.challengeModal.querySelector('.terminal-output-display');
+        if (existing2) existing2.remove();
         
         const feedback = document.createElement('div');
         feedback.className = `feedback-message ${isCorrect ? 'success' : 'error'}`;
@@ -218,9 +221,53 @@ class UIManager {
         
         this.challengeModal.querySelector('.terminal-body').appendChild(feedback);
         
+        // Show terminal output for correct answers
+        if (isCorrect && terminalOutput) {
+            setTimeout(() => {
+                this.showTerminalOutput(terminalOutput);
+            }, 500);
+        }
+        
         setTimeout(() => {
             feedback.remove();
-        }, 2000);
+        }, terminalOutput ? 3000 : 2000);
+    }
+    
+    showTerminalOutput(output) {
+        if (!output || output.trim() === '') return;
+        
+        const terminalDiv = document.createElement('div');
+        terminalDiv.className = 'terminal-output-display';
+        
+        // Create output container
+        const outputContainer = document.createElement('div');
+        outputContainer.className = 'terminal-output-text pixel-text-small';
+        
+        terminalDiv.appendChild(outputContainer);
+        this.challengeModal.querySelector('.terminal-body').appendChild(terminalDiv);
+        
+        // Typing animation effect
+        this.typewriterEffect(outputContainer, output);
+    }
+    
+    typewriterEffect(element, text, speed = 10) {
+        let index = 0;
+        element.textContent = '';
+        
+        const type = () => {
+            if (index < text.length) {
+                // Handle newlines
+                if (text[index] === '\n') {
+                    element.innerHTML += '<br>';
+                } else {
+                    element.textContent += text[index];
+                }
+                index++;
+                setTimeout(type, speed);
+            }
+        };
+        
+        type();
     }
 
     showCheatSheet() {

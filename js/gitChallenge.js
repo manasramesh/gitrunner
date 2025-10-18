@@ -23,7 +23,8 @@ class GitChallengeSystem {
                 alternatives: ['git init .'],
                 hint: 'Creates a .git folder',
                 category: 'Basic',
-                points: 100
+                points: 100,
+                terminalOutput: 'Initialized empty Git repository in /project/.git/'
             },
             {
                 id: 2,
@@ -33,7 +34,8 @@ class GitChallengeSystem {
                 alternatives: ['git add readme.md', 'git add .', 'git add -a', 'git add --all'],
                 hint: 'Adds files to staging area',
                 category: 'Basic',
-                points: 100
+                points: 100,
+                terminalOutput: ''  // Silent success (Git add has no output)
             },
             {
                 id: 3,
@@ -43,7 +45,8 @@ class GitChallengeSystem {
                 alternatives: ['git commit -m "initial commit"', 'git commit -m initial commit'],
                 hint: 'Records changes to the repository',
                 category: 'Basic',
-                points: 100
+                points: 100,
+                terminalOutput: '[main a3f2c9b] Initial commit\n 1 file changed, 10 insertions(+)\n create mode 100644 README.md'
             },
             {
                 id: 4,
@@ -53,7 +56,8 @@ class GitChallengeSystem {
                 alternatives: [],
                 hint: 'Shows modified files',
                 category: 'Basic',
-                points: 100
+                points: 100,
+                terminalOutput: 'On branch main\nYour branch is up to date with \'origin/main\'.\n\nnothing to commit, working tree clean'
             },
             {
                 id: 5,
@@ -63,7 +67,8 @@ class GitChallengeSystem {
                 alternatives: ['git log --oneline', 'git log --all'],
                 hint: 'Shows commit history',
                 category: 'Basic',
-                points: 100
+                points: 100,
+                terminalOutput: 'commit f8e1d4a (HEAD -> main, origin/main)\nAuthor: Developer <dev@example.com>\nDate:   Sat Oct 18 14:30:22 2025\n\n    Add new feature\n\ncommit a3f2c9b\nAuthor: Developer <dev@example.com>\nDate:   Sat Oct 18 12:15:10 2025\n\n    Initial commit'
             },
             {
                 id: 6,
@@ -73,7 +78,8 @@ class GitChallengeSystem {
                 alternatives: ['git diff head'],
                 hint: 'Shows file differences',
                 category: 'Basic',
-                points: 100
+                points: 100,
+                terminalOutput: 'diff --git a/file.js b/file.js\nindex a3f2c9b..f8e1d4a 100644\n--- a/file.js\n+++ b/file.js\n@@ -1,3 +1,4 @@\n function hello() {\n+  console.log("Updated!");\n   return "world";\n }'
             },
             {
                 id: 7,
@@ -83,7 +89,8 @@ class GitChallengeSystem {
                 alternatives: ['git add -a', 'git add --all', 'git add *'],
                 hint: 'Stages all changes',
                 category: 'Basic',
-                points: 100
+                points: 100,
+                terminalOutput: ''  // Silent success
             },
 
             // BRANCHING (Checkpoint 4-6)
@@ -95,7 +102,8 @@ class GitChallengeSystem {
                 alternatives: ['git checkout -b feature', 'git switch -c feature'],
                 hint: 'Creates a new branch',
                 category: 'Branching',
-                points: 150
+                points: 150,
+                terminalOutput: ''  // Silent success for git branch
             },
             {
                 id: 9,
@@ -105,7 +113,8 @@ class GitChallengeSystem {
                 alternatives: ['git switch develop'],
                 hint: 'Changes current branch',
                 category: 'Branching',
-                points: 150
+                points: 150,
+                terminalOutput: 'Switched to branch \'develop\'\nYour branch is up to date with \'origin/develop\'.'
             },
             {
                 id: 10,
@@ -115,7 +124,8 @@ class GitChallengeSystem {
                 alternatives: ['git branch -a', 'git branch --all', 'git branch -l'],
                 hint: 'Shows all branches',
                 category: 'Branching',
-                points: 150
+                points: 150,
+                terminalOutput: '  develop\n  feature\n* main\n  hotfix'
             },
             {
                 id: 11,
@@ -125,7 +135,8 @@ class GitChallengeSystem {
                 alternatives: [],
                 hint: 'Combines branches',
                 category: 'Branching',
-                points: 150
+                points: 150,
+                terminalOutput: 'Updating a3f2c9b..f8e1d4a\nFast-forward\n file.js | 15 +++++++++++++++\n 1 file changed, 15 insertions(+)'
             },
             {
                 id: 12,
@@ -135,7 +146,8 @@ class GitChallengeSystem {
                 alternatives: ['git branch --delete old-feature', 'git branch -d old-feature'],
                 hint: 'Removes a branch',
                 category: 'Branching',
-                points: 150
+                points: 150,
+                terminalOutput: 'Deleted branch old-feature (was a3f2c9b).'
             },
             {
                 id: 13,
@@ -145,7 +157,8 @@ class GitChallengeSystem {
                 alternatives: ['git switch -c hotfix'],
                 hint: 'Create and checkout together',
                 category: 'Branching',
-                points: 150
+                points: 150,
+                terminalOutput: 'Switched to a new branch \'hotfix\''
             },
 
             // REMOTE OPERATIONS (Checkpoint 7-10)
@@ -167,7 +180,8 @@ class GitChallengeSystem {
                 alternatives: ['git push'],
                 hint: 'Uploads local commits',
                 category: 'Remote',
-                points: 200
+                points: 200,
+                terminalOutput: 'Enumerating objects: 5, done.\nCounting objects: 100% (5/5), done.\nWriting objects: 100% (3/3), 287 bytes | 287.00 KiB/s, done.\nTotal 3 (delta 0), reused 0 (delta 0)\nTo https://github.com/user/repo.git\n   a3f2c9b..f8e1d4a  main -> main'
             },
             {
                 id: 16,
@@ -177,7 +191,8 @@ class GitChallengeSystem {
                 alternatives: ['git pull'],
                 hint: 'Downloads and merges changes',
                 category: 'Remote',
-                points: 200
+                points: 200,
+                terminalOutput: 'From https://github.com/user/repo\n * branch            main       -> FETCH_HEAD\nUpdating a3f2c9b..f8e1d4a\nFast-forward\n src/app.js | 25 +++++++++++++++++++++++++\n 1 file changed, 25 insertions(+)'
             },
             {
                 id: 17,
@@ -187,7 +202,8 @@ class GitChallengeSystem {
                 alternatives: [],
                 hint: 'Downloads entire repository',
                 category: 'Remote',
-                points: 200
+                points: 200,
+                terminalOutput: 'Cloning into \'project\'...\nremote: Enumerating objects: 42, done.\nremote: Counting objects: 100% (42/42), done.\nremote: Compressing objects: 100% (28/28), done.\nReceiving objects: 100% (42/42), 8.52 KiB | 1.70 MiB/s, done.\nResolving deltas: 100% (12/12), done.'
             },
             {
                 id: 18,
@@ -197,7 +213,8 @@ class GitChallengeSystem {
                 alternatives: ['git fetch origin'],
                 hint: 'Downloads without merging',
                 category: 'Remote',
-                points: 200
+                points: 200,
+                terminalOutput: 'remote: Enumerating objects: 5, done.\nremote: Counting objects: 100% (5/5), done.\nremote: Total 3 (delta 0), reused 0 (delta 0)\nUnpacking objects: 100% (3/3), done.\nFrom https://github.com/user/repo\n   a3f2c9b..f8e1d4a  main       -> origin/main'
             },
             {
                 id: 19,
@@ -207,7 +224,8 @@ class GitChallengeSystem {
                 alternatives: ['git remote --verbose', 'git remote'],
                 hint: 'Lists remote connections',
                 category: 'Remote',
-                points: 200
+                points: 200,
+                terminalOutput: 'origin\thttps://github.com/user/repo.git (fetch)\norigin\thttps://github.com/user/repo.git (push)'
             },
             {
                 id: 20,
@@ -229,7 +247,8 @@ class GitChallengeSystem {
                 alternatives: ['git stash save', 'git stash push'],
                 hint: 'Saves work in progress',
                 category: 'Advanced',
-                points: 250
+                points: 250,
+                terminalOutput: 'Saved working directory and index state WIP on main: a3f2c9b Add feature'
             },
             {
                 id: 22,
@@ -239,7 +258,8 @@ class GitChallengeSystem {
                 alternatives: ['git stash apply'],
                 hint: 'Restores stashed changes',
                 category: 'Advanced',
-                points: 250
+                points: 250,
+                terminalOutput: 'On branch main\nChanges not staged for commit:\n  modified:   src/app.js\n\nDropped refs/stash@{0} (f8e1d4a)'
             },
             {
                 id: 23,
@@ -249,7 +269,8 @@ class GitChallengeSystem {
                 alternatives: [],
                 hint: 'Reapplies commits on top',
                 category: 'Advanced',
-                points: 250
+                points: 250,
+                terminalOutput: 'Successfully rebased and updated refs/heads/feature.\n3 commits applied'
             },
             {
                 id: 24,
@@ -259,7 +280,8 @@ class GitChallengeSystem {
                 alternatives: ['git reset --soft head~1', 'git reset --mixed head~1'],
                 hint: 'Moves HEAD pointer',
                 category: 'Advanced',
-                points: 250
+                points: 250,
+                terminalOutput: 'Unstaged changes after reset:\nM\tsrc/app.js\nM\tREADME.md'
             },
             {
                 id: 25,
@@ -269,7 +291,8 @@ class GitChallengeSystem {
                 alternatives: [],
                 hint: 'Applies specific commit',
                 category: 'Advanced',
-                points: 250
+                points: 250,
+                terminalOutput: '[main f8e1d4a] Feature: Add login\n Date: Sat Oct 18 15:45:30 2025\n 1 file changed, 42 insertions(+)'
             },
             {
                 id: 26,
@@ -279,7 +302,8 @@ class GitChallengeSystem {
                 alternatives: ['git tag -a v1.0'],
                 hint: 'Marks a specific point',
                 category: 'Advanced',
-                points: 250
+                points: 250,
+                terminalOutput: ''  // Silent success
             },
             {
                 id: 27,

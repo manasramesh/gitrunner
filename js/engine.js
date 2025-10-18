@@ -383,7 +383,13 @@ class GameEngine {
             const powerupType = this.powerupManager.grantRandomPowerUp();
             const powerup = new PowerUp(0, 0, powerupType);
             
-            this.ui.showFeedback(true, `Perfect! +${this.currentChallenge.points} points + ${powerup.icons[powerupType]} Power-up!`);
+            // Show terminal output for correct answer
+            const terminalOutput = this.currentChallenge.terminalOutput || '';
+            this.ui.showFeedback(
+                true, 
+                `Perfect! +${this.currentChallenge.points} points + ${powerup.icons[powerupType]} Power-up!`,
+                terminalOutput
+            );
             
             // Check for perfect streak achievement
             if (this.achievementTracker.perfectStreak === 5) {
@@ -392,9 +398,11 @@ class GameEngine {
                 }, 1600);
             }
             
+            // Wait longer if there's terminal output to show
+            const delay = terminalOutput ? 4000 : 1500;
             setTimeout(() => {
                 this.resumeFromCheckpoint();
-            }, 1500);
+            }, delay);
         } else {
             this.audio.playWrong();
             this.loseLife();
