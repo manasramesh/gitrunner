@@ -519,11 +519,14 @@ class GameEngine {
     }
 
     render() {
+        const logicalWidth = this.canvas.logicalWidth || this.canvas.width;
+        const logicalHeight = this.canvas.logicalHeight || this.canvas.height;
+        
         // Render background (separate canvas for performance)
         this.world.renderBackground(this.bgCtx);
         
-        // Clear main canvas
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        // Clear main canvas (use logical dimensions)
+        this.ctx.clearRect(0, 0, logicalWidth, logicalHeight);
         
         // Apply screen shake
         this.ctx.save();

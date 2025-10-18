@@ -288,7 +288,8 @@ class World {
             return;
         }
         
-        const x = this.canvas.width + 50;
+        const canvasWidth = this.canvas.logicalWidth || this.canvas.width;
+        const x = canvasWidth + 50;
         
         // Spawn pattern based on difficulty
         const difficulty = this.getDifficultyLevel();
@@ -345,6 +346,8 @@ class World {
         const types = ['spike', 'barrier'];
         const type = types[Math.floor(Math.random() * types.length)];
         
+        const canvasHeight = this.canvas.logicalHeight || this.canvas.height;
+        
         // Progressive sizing based on difficulty (all jumpable with 120px max jump)
         let spikeHeight, barrierHeightMin, barrierHeightMax;
         
@@ -371,16 +374,18 @@ class World {
         }
         
         if (type === 'spike') {
-            const obstacle = new Obstacle(x, this.canvas.height - spikeHeight, 48, spikeHeight, 'spike');
+            const obstacle = new Obstacle(x, canvasHeight - spikeHeight, 48, spikeHeight, 'spike');
             this.obstacles.push(obstacle);
         } else {
             const height = barrierHeightMin + Math.floor(Math.random() * (barrierHeightMax - barrierHeightMin + 1));
-            const obstacle = new Obstacle(x, this.canvas.height - height, 32, height, 'barrier');
+            const obstacle = new Obstacle(x, canvasHeight - height, 32, height, 'barrier');
             this.obstacles.push(obstacle);
         }
     }
 
     spawnPair(x, difficulty) {
+        const canvasHeight = this.canvas.logicalHeight || this.canvas.height;
+        
         // Ground spike + barrier with progressive sizing
         let spikeHeight, barrierHeight;
         
@@ -398,12 +403,14 @@ class World {
             barrierHeight = 90;
         }
         
-        const spike = new Obstacle(x, this.canvas.height - spikeHeight, 48, spikeHeight, 'spike');
-        const barrier = new Obstacle(x + 150, this.canvas.height - barrierHeight, 32, barrierHeight, 'barrier');
+        const spike = new Obstacle(x, canvasHeight - spikeHeight, 48, spikeHeight, 'spike');
+        const barrier = new Obstacle(x + 150, canvasHeight - barrierHeight, 32, barrierHeight, 'barrier');
         this.obstacles.push(spike, barrier);
     }
 
     spawnComplexPattern(x, difficulty) {
+        const canvasHeight = this.canvas.logicalHeight || this.canvas.height;
+        
         // Create challenging patterns with progressive sizing
         const pattern = Math.floor(Math.random() * 3);
         
@@ -426,18 +433,18 @@ class World {
         if (pattern === 0) {
             // Triple spike pattern
             for (let i = 0; i < 3; i++) {
-                const spike = new Obstacle(x + i * 70, this.canvas.height - spikeHeight, 32, spikeHeight, 'spike');
+                const spike = new Obstacle(x + i * 70, canvasHeight - spikeHeight, 32, spikeHeight, 'spike');
                 this.obstacles.push(spike);
             }
         } else if (pattern === 1) {
             // High-low barriers
-            const high = new Obstacle(x, this.canvas.height - highBarrier, 32, highBarrier, 'barrier');
-            const low = new Obstacle(x + 100, this.canvas.height - lowBarrier, 32, lowBarrier, 'barrier');
+            const high = new Obstacle(x, canvasHeight - highBarrier, 32, highBarrier, 'barrier');
+            const low = new Obstacle(x + 100, canvasHeight - lowBarrier, 32, lowBarrier, 'barrier');
             this.obstacles.push(high, low);
         } else {
             // Mixed pattern
-            const spike = new Obstacle(x, this.canvas.height - spikeHeight, 48, spikeHeight, 'spike');
-            const barrier = new Obstacle(x + 140, this.canvas.height - lowBarrier + 12, 32, lowBarrier, 'barrier');
+            const spike = new Obstacle(x, canvasHeight - spikeHeight, 48, spikeHeight, 'spike');
+            const barrier = new Obstacle(x + 140, canvasHeight - lowBarrier + 12, 32, lowBarrier, 'barrier');
             this.obstacles.push(spike, barrier);
         }
     }
