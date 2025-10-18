@@ -362,6 +362,518 @@ class GitChallengeSystem {
                 hint: 'Removes untracked files',
                 category: 'Expert',
                 points: 300
+            },
+            
+            // DEVOPS & CI/CD (Checkpoint 8+)
+            {
+                id: 35,
+                difficulty: 'remote',
+                scenario: 'Force push your local branch to remote (use with caution!).',
+                answer: 'git push -f',
+                alternatives: ['git push --force', 'git push origin main -f', 'git push --force-with-lease'],
+                flexibleMatch: true,
+                hint: 'Overwrites remote branch',
+                category: 'DevOps',
+                points: 200
+            },
+            {
+                id: 36,
+                difficulty: 'advanced',
+                scenario: 'Show the changes introduced by a specific commit abc123.',
+                answer: 'git show abc123',
+                alternatives: ['git show abc123', 'git diff abc123^!'],
+                flexibleMatch: true,
+                hint: 'Displays commit details',
+                category: 'DevOps',
+                points: 250
+            },
+            {
+                id: 37,
+                difficulty: 'basic',
+                scenario: 'Configure your global Git username as "developer".',
+                answer: 'git config --global user.name developer',
+                alternatives: ['git config --global user.name "developer"'],
+                flexibleMatch: true,
+                hint: 'Sets Git username',
+                category: 'Basic',
+                points: 100
+            },
+            {
+                id: 38,
+                difficulty: 'basic',
+                scenario: 'Configure your global Git email as dev@example.com.',
+                answer: 'git config --global user.email dev@example.com',
+                alternatives: ['git config --global user.email "dev@example.com"'],
+                flexibleMatch: true,
+                hint: 'Sets Git email',
+                category: 'Basic',
+                points: 100
+            },
+            {
+                id: 39,
+                difficulty: 'branching',
+                scenario: 'Rename the current branch to "new-name".',
+                answer: 'git branch -m new-name',
+                alternatives: ['git branch --move new-name'],
+                hint: 'Moves/renames branch',
+                category: 'Branching',
+                points: 150
+            },
+            {
+                id: 40,
+                difficulty: 'advanced',
+                scenario: 'Create a lightweight tag "v1.0" for the current commit.',
+                answer: 'git tag v1.0',
+                alternatives: ['git tag -a v1.0'],
+                flexibleMatch: true,
+                hint: 'Marks a version',
+                category: 'DevOps',
+                points: 250
+            },
+            {
+                id: 41,
+                difficulty: 'advanced',
+                scenario: 'Push all tags to the remote repository.',
+                answer: 'git push --tags',
+                alternatives: ['git push origin --tags'],
+                hint: 'Uploads version tags',
+                category: 'DevOps',
+                points: 250
+            },
+            {
+                id: 42,
+                difficulty: 'remote',
+                scenario: 'Set the upstream branch for current branch to track origin/main.',
+                answer: 'git branch --set-upstream-to=origin/main',
+                alternatives: ['git push -u origin main', 'git branch -u origin/main'],
+                flexibleMatch: true,
+                hint: 'Links local to remote',
+                category: 'Remote',
+                points: 200
+            },
+            
+            // SECURITY & BEST PRACTICES (Checkpoint 10+)
+            {
+                id: 43,
+                difficulty: 'expert',
+                scenario: 'Remove sensitive file secrets.txt from Git history.',
+                answer: 'git filter-branch --tree-filter "rm -f secrets.txt"',
+                alternatives: ['git filter-branch', 'git filter-repo'],
+                acceptVariations: true,
+                hint: 'Rewrites history',
+                category: 'Security',
+                points: 300
+            },
+            {
+                id: 44,
+                difficulty: 'advanced',
+                scenario: 'Sign your commit with GPG key.',
+                answer: 'git commit -S',
+                alternatives: ['git commit --gpg-sign', 'git commit -S -m message'],
+                flexibleMatch: true,
+                hint: 'Cryptographic signature',
+                category: 'Security',
+                points: 250
+            },
+            {
+                id: 45,
+                difficulty: 'expert',
+                scenario: 'Verify the GPG signature of the last commit.',
+                answer: 'git verify-commit HEAD',
+                alternatives: ['git log --show-signature'],
+                hint: 'Checks commit authenticity',
+                category: 'Security',
+                points: 300
+            },
+            {
+                id: 46,
+                difficulty: 'advanced',
+                scenario: 'Create a .gitignore file to ignore node_modules directory.',
+                answer: 'echo node_modules > .gitignore',
+                alternatives: ['git ignore node_modules', 'echo "node_modules" > .gitignore'],
+                acceptVariations: true,
+                hint: 'Excludes files from Git',
+                category: 'Security',
+                points: 250
+            },
+            
+            // COLLABORATION & WORKFLOWS (Checkpoint 11+)
+            {
+                id: 47,
+                difficulty: 'remote',
+                scenario: 'Fetch and merge changes from upstream remote.',
+                answer: 'git pull upstream main',
+                alternatives: ['git fetch upstream', 'git pull upstream'],
+                flexibleMatch: true,
+                hint: 'Syncs with upstream',
+                category: 'Collaboration',
+                points: 200
+            },
+            {
+                id: 48,
+                difficulty: 'branching',
+                scenario: 'Create a new branch from a specific commit abc123.',
+                answer: 'git checkout -b newbranch abc123',
+                alternatives: ['git branch newbranch abc123', 'git switch -c newbranch abc123'],
+                flexibleMatch: true,
+                hint: 'Branch from commit',
+                category: 'Collaboration',
+                points: 150
+            },
+            {
+                id: 49,
+                difficulty: 'advanced',
+                scenario: 'Squash the last 3 commits into one.',
+                answer: 'git rebase -i HEAD~3',
+                alternatives: ['git rebase --interactive HEAD~3'],
+                hint: 'Combines commits',
+                category: 'Collaboration',
+                points: 250
+            },
+            {
+                id: 50,
+                difficulty: 'expert',
+                scenario: 'Abort an ongoing merge conflict.',
+                answer: 'git merge --abort',
+                alternatives: ['git reset --merge'],
+                hint: 'Cancels merge',
+                category: 'Collaboration',
+                points: 300
+            },
+            {
+                id: 51,
+                difficulty: 'expert',
+                scenario: 'Abort an ongoing rebase operation.',
+                answer: 'git rebase --abort',
+                alternatives: [],
+                hint: 'Cancels rebase',
+                category: 'Collaboration',
+                points: 300
+            },
+            
+            // CLOUD & DEPLOYMENT (Checkpoint 12+)
+            {
+                id: 52,
+                difficulty: 'remote',
+                scenario: 'Deploy by pushing to heroku remote.',
+                answer: 'git push heroku main',
+                alternatives: ['git push heroku master'],
+                flexibleMatch: true,
+                hint: 'Cloud deployment',
+                category: 'Cloud',
+                points: 200
+            },
+            {
+                id: 53,
+                difficulty: 'advanced',
+                scenario: 'Create a Git archive of the current branch as a zip file.',
+                answer: 'git archive -o project.zip HEAD',
+                alternatives: ['git archive --format=zip HEAD', 'git archive HEAD'],
+                acceptVariations: true,
+                hint: 'Exports repository',
+                category: 'Cloud',
+                points: 250
+            },
+            {
+                id: 54,
+                difficulty: 'remote',
+                scenario: 'Add a second remote called "backup" for disaster recovery.',
+                answer: 'git remote add backup url',
+                alternatives: ['git remote add backup'],
+                acceptVariations: true,
+                hint: 'Multiple remotes',
+                category: 'Cloud',
+                points: 200
+            },
+            
+            // DEBUGGING & TROUBLESHOOTING (Checkpoint 13+)
+            {
+                id: 55,
+                difficulty: 'expert',
+                scenario: 'Find which commit introduced a bug using binary search.',
+                answer: 'git bisect start',
+                alternatives: ['git bisect'],
+                hint: 'Binary search commits',
+                category: 'Debugging',
+                points: 300
+            },
+            {
+                id: 56,
+                difficulty: 'expert',
+                scenario: 'Mark the current commit as bad during bisect.',
+                answer: 'git bisect bad',
+                alternatives: [],
+                hint: 'Bisect marker',
+                category: 'Debugging',
+                points: 300
+            },
+            {
+                id: 57,
+                difficulty: 'expert',
+                scenario: 'Mark a commit as good during bisect.',
+                answer: 'git bisect good',
+                alternatives: ['git bisect good abc123'],
+                flexibleMatch: true,
+                hint: 'Bisect marker',
+                category: 'Debugging',
+                points: 300
+            },
+            {
+                id: 58,
+                difficulty: 'advanced',
+                scenario: 'Find who last modified each line of file.txt.',
+                answer: 'git blame file.txt',
+                alternatives: ['git annotate file.txt'],
+                hint: 'Line-by-line history',
+                category: 'Debugging',
+                points: 250
+            },
+            {
+                id: 59,
+                difficulty: 'advanced',
+                scenario: 'Search for commits containing the word "bugfix" in message.',
+                answer: 'git log --grep=bugfix',
+                alternatives: ['git log --grep bugfix', 'git log --grep="bugfix"'],
+                flexibleMatch: true,
+                hint: 'Search commit messages',
+                category: 'Debugging',
+                points: 250
+            },
+            {
+                id: 60,
+                difficulty: 'expert',
+                scenario: 'Show commits that changed file.txt.',
+                answer: 'git log file.txt',
+                alternatives: ['git log -- file.txt', 'git log --follow file.txt'],
+                flexibleMatch: true,
+                hint: 'File history',
+                category: 'Debugging',
+                points: 300
+            },
+            
+            // PERFORMANCE & OPTIMIZATION (Checkpoint 14+)
+            {
+                id: 61,
+                difficulty: 'expert',
+                scenario: 'Optimize the local repository by running garbage collection.',
+                answer: 'git gc',
+                alternatives: ['git gc --aggressive'],
+                flexibleMatch: true,
+                hint: 'Cleans up repository',
+                category: 'Performance',
+                points: 300
+            },
+            {
+                id: 62,
+                difficulty: 'advanced',
+                scenario: 'Clone only the latest commit (shallow clone) to save bandwidth.',
+                answer: 'git clone --depth 1 url',
+                alternatives: ['git clone --depth=1'],
+                acceptVariations: true,
+                hint: 'Faster clone',
+                category: 'Performance',
+                points: 250
+            },
+            {
+                id: 63,
+                difficulty: 'expert',
+                scenario: 'Prune remote-tracking branches that no longer exist.',
+                answer: 'git remote prune origin',
+                alternatives: ['git fetch --prune', 'git fetch -p'],
+                flexibleMatch: true,
+                hint: 'Cleans remote refs',
+                category: 'Performance',
+                points: 300
+            },
+            
+            // ADVANCED WORKFLOWS (Checkpoint 15+)
+            {
+                id: 64,
+                difficulty: 'expert',
+                scenario: 'Create a patch file from the last commit.',
+                answer: 'git format-patch -1',
+                alternatives: ['git format-patch HEAD~1..HEAD', 'git format-patch -1 HEAD'],
+                flexibleMatch: true,
+                hint: 'Exports commit as patch',
+                category: 'Advanced',
+                points: 300
+            },
+            {
+                id: 65,
+                difficulty: 'expert',
+                scenario: 'Apply a patch file to your repository.',
+                answer: 'git apply patch.patch',
+                alternatives: ['git am patch.patch'],
+                acceptVariations: true,
+                hint: 'Imports patch',
+                category: 'Advanced',
+                points: 300
+            },
+            {
+                id: 66,
+                difficulty: 'advanced',
+                scenario: 'Show a summary of changes in the staging area.',
+                answer: 'git diff --staged',
+                alternatives: ['git diff --cached'],
+                hint: 'Shows staged changes',
+                category: 'Basic',
+                points: 250
+            },
+            {
+                id: 67,
+                difficulty: 'advanced',
+                scenario: 'Temporarily switch to a different commit to examine it.',
+                answer: 'git checkout abc123',
+                alternatives: ['git switch --detach abc123'],
+                flexibleMatch: true,
+                hint: 'Detached HEAD',
+                category: 'Advanced',
+                points: 250
+            },
+            {
+                id: 68,
+                difficulty: 'expert',
+                scenario: 'Find commits in current branch but not in main.',
+                answer: 'git log main..HEAD',
+                alternatives: ['git log main..', 'git cherry main'],
+                flexibleMatch: true,
+                hint: 'Compare branches',
+                category: 'Advanced',
+                points: 300
+            },
+            {
+                id: 69,
+                difficulty: 'expert',
+                scenario: 'Revert a merge commit abc123.',
+                answer: 'git revert -m 1 abc123',
+                alternatives: ['git revert --mainline 1 abc123'],
+                flexibleMatch: true,
+                hint: 'Undoes merge',
+                category: 'Advanced',
+                points: 300
+            },
+            {
+                id: 70,
+                difficulty: 'advanced',
+                scenario: 'Copy a commit from another branch to current branch.',
+                answer: 'git cherry-pick abc123',
+                alternatives: [],
+                hint: 'Selective commit apply',
+                category: 'Advanced',
+                points: 250
+            },
+            
+            // GIT SUBMODULES & SUBTREES (Checkpoint 16+)
+            {
+                id: 71,
+                difficulty: 'expert',
+                scenario: 'Add a Git submodule from https://github.com/user/lib.git.',
+                answer: 'git submodule add https://github.com/user/lib.git',
+                alternatives: [],
+                hint: 'Nested repository',
+                category: 'Advanced',
+                points: 300
+            },
+            {
+                id: 72,
+                difficulty: 'expert',
+                scenario: 'Update all submodules to their latest commits.',
+                answer: 'git submodule update --remote',
+                alternatives: ['git submodule update --recursive --remote'],
+                flexibleMatch: true,
+                hint: 'Syncs submodules',
+                category: 'Advanced',
+                points: 300
+            },
+            {
+                id: 73,
+                difficulty: 'expert',
+                scenario: 'Initialize and clone all submodules after cloning a repo.',
+                answer: 'git submodule init',
+                alternatives: ['git submodule update --init', 'git clone --recursive'],
+                flexibleMatch: true,
+                hint: 'Sets up submodules',
+                category: 'Advanced',
+                points: 300
+            },
+            
+            // MONOREPO & LARGE REPOS (Checkpoint 17+)
+            {
+                id: 74,
+                difficulty: 'expert',
+                scenario: 'Enable Git LFS for tracking large binary files.',
+                answer: 'git lfs install',
+                alternatives: ['git lfs track'],
+                acceptVariations: true,
+                hint: 'Large File Storage',
+                category: 'Performance',
+                points: 300
+            },
+            {
+                id: 75,
+                difficulty: 'expert',
+                scenario: 'Track all .zip files with Git LFS.',
+                answer: 'git lfs track "*.zip"',
+                alternatives: ['git lfs track *.zip'],
+                flexibleMatch: true,
+                hint: 'LFS file pattern',
+                category: 'Performance',
+                points: 300
+            },
+            
+            // TEAM WORKFLOWS (Checkpoint 18+)
+            {
+                id: 76,
+                difficulty: 'advanced',
+                scenario: 'Fetch all branches from all remotes.',
+                answer: 'git fetch --all',
+                alternatives: ['git remote update'],
+                hint: 'Updates all remotes',
+                category: 'Collaboration',
+                points: 250
+            },
+            {
+                id: 77,
+                difficulty: 'advanced',
+                scenario: 'Show which branches contain commit abc123.',
+                answer: 'git branch --contains abc123',
+                alternatives: ['git branch -a --contains abc123'],
+                flexibleMatch: true,
+                hint: 'Branch search',
+                category: 'Collaboration',
+                points: 250
+            },
+            {
+                id: 78,
+                difficulty: 'expert',
+                scenario: 'Create an orphan branch (no history) for GitHub Pages.',
+                answer: 'git checkout --orphan gh-pages',
+                alternatives: ['git switch --orphan gh-pages'],
+                hint: 'Fresh branch',
+                category: 'Cloud',
+                points: 300
+            },
+            {
+                id: 79,
+                difficulty: 'advanced',
+                scenario: 'Compare two branches: feature and main.',
+                answer: 'git diff main..feature',
+                alternatives: ['git diff main feature', 'git log main..feature'],
+                flexibleMatch: true,
+                hint: 'Branch comparison',
+                category: 'Collaboration',
+                points: 250
+            },
+            {
+                id: 80,
+                difficulty: 'expert',
+                scenario: 'Recover a deleted branch using reflog.',
+                answer: 'git reflog',
+                alternatives: ['git checkout -b branch HEAD@{n}'],
+                acceptVariations: true,
+                hint: 'Branch recovery',
+                category: 'Debugging',
+                points: 300
             }
         ];
     }
@@ -410,13 +922,26 @@ class GitChallengeSystem {
     validateAnswer(userInput) {
         if (!this.currentChallenge) return false;
         
-        const normalized = userInput.trim().toLowerCase();
-        const correctAnswer = this.currentChallenge.answer.toLowerCase();
-        const alternatives = this.currentChallenge.alternatives.map(a => a.toLowerCase());
+        // Normalize: trim, lowercase, remove extra spaces
+        let normalized = userInput.trim().toLowerCase().replace(/\s+/g, ' ');
+        
+        // Remove quotes variations (both single and double)
+        normalized = normalized.replace(/["']/g, '');
+        
+        const correctAnswer = this.currentChallenge.answer.toLowerCase().replace(/["']/g, '');
+        const alternatives = this.currentChallenge.alternatives.map(a => 
+            a.toLowerCase().replace(/["']/g, '').replace(/\s+/g, ' ')
+        );
         
         this.totalAttempts++;
         
-        const isCorrect = normalized === correctAnswer || alternatives.includes(normalized);
+        // Check exact match or alternatives
+        let isCorrect = normalized === correctAnswer || alternatives.includes(normalized);
+        
+        // Additional flexible matching for common variations
+        if (!isCorrect && this.currentChallenge.flexibleMatch) {
+            isCorrect = this.flexibleMatch(normalized, this.currentChallenge);
+        }
         
         if (isCorrect) {
             this.correctAnswers++;
@@ -427,6 +952,32 @@ class GitChallengeSystem {
         
         return isCorrect;
     }
+    
+    flexibleMatch(input, challenge) {
+        // Extract the main command (first two words usually)
+        const inputParts = input.split(' ');
+        const answerParts = challenge.answer.toLowerCase().replace(/["']/g, '').split(' ');
+        
+        // Must match the main git command (first 2-3 parts)
+        const minMatch = Math.min(2, answerParts.length);
+        for (let i = 0; i < minMatch; i++) {
+            if (inputParts[i] !== answerParts[i]) {
+                return false;
+            }
+        }
+        
+        // If it's just "git command" without arguments, accept it
+        if (inputParts.length === 2 && answerParts.length === 2) {
+            return true;
+        }
+        
+        // Accept variations like -m vs --message, -a vs --all, etc.
+        if (challenge.acceptVariations) {
+            return true;
+        }
+        
+        return false;
+    }
 
     getCheatSheet() {
         const categories = {
@@ -434,15 +985,31 @@ class GitChallengeSystem {
             'Branching': [],
             'Remote': [],
             'Advanced': [],
-            'Expert': []
+            'Expert': [],
+            'DevOps': [],
+            'Security': [],
+            'Cloud': [],
+            'Collaboration': [],
+            'Debugging': [],
+            'Performance': []
         };
         
         this.challenges.forEach(challenge => {
+            if (!categories[challenge.category]) {
+                categories[challenge.category] = [];
+            }
             categories[challenge.category].push({
                 command: challenge.answer,
                 description: challenge.scenario,
                 hint: challenge.hint
             });
+        });
+        
+        // Remove empty categories
+        Object.keys(categories).forEach(key => {
+            if (categories[key].length === 0) {
+                delete categories[key];
+            }
         });
         
         return categories;

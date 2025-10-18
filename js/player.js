@@ -280,7 +280,7 @@ class Player {
 
     reset(x, y) {
         this.x = x;
-        this.y = y;
+        this.y = y || this.groundY; // Default to ground position if not specified
         this.velocityY = 0;
         this.velocityX = 0;
         this.isGrounded = false;

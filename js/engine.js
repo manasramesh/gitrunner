@@ -17,7 +17,7 @@ class GameEngine {
         this.gitChallenge = new GitChallengeSystem();
         this.powerupManager = new PowerUpManager();
         this.world = new World(this.canvas);
-        this.player = new Player(100, 400);
+        this.player = new Player(100, 568); // Correct ground position
         this.ui = new UIManager(this.gitChallenge);
         
         // Game state
@@ -184,7 +184,7 @@ class GameEngine {
         this.nextCheckpoint = 500;
         this.coins = 0;
         this.combo = 0;
-        this.player.reset(100, 400);
+        this.player.reset(100, 568); // Correct ground position
         this.world.reset();
         this.powerupManager.reset();
         this.particles.clear();
@@ -429,7 +429,7 @@ class GameEngine {
         if (this.lives > 0) {
             // Brief invincibility and reset position
             this.powerupManager.activatePowerUp('shield');
-            this.player.reset(100, 400);
+            this.player.reset(100, 568); // Correct ground position
         }
     }
 
