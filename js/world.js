@@ -446,7 +446,8 @@ class World {
         // Spawn coin patterns at reachable heights (dynamic based on canvas)
         const coinCount = 3 + Math.floor(Math.random() * 3);
         const pattern = Math.random();
-        const groundY = this.canvas.height - 32;
+        const logicalHeight = this.canvas.logicalHeight || this.canvas.height;
+        const groundY = logicalHeight - 32;
         const baseY = groundY - 120; // Player can jump ~120px up
         
         if (pattern < 0.5) {
@@ -477,10 +478,12 @@ class World {
         };
         
         const colors = biomeColors[this.biomes[this.currentBiome]];
+        const width = this.canvas.logicalWidth || this.canvas.width;
+        const height = this.canvas.logicalHeight || this.canvas.height;
         
         // Draw base background
         ctx.fillStyle = colors[0];
-        ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        ctx.fillRect(0, 0, width, height);
         
         // Draw Git commit graph in background
         this.renderGitGraph(ctx, colors);
@@ -490,32 +493,35 @@ class World {
         
         // Draw ground (terminal style with Git prompt)
         ctx.fillStyle = '#0a0a0a';
-        ctx.fillRect(0, this.canvas.height - 32, this.canvas.width, 32);
+        ctx.fillRect(0, height - 32, width, 32);
         
         // Ground line (terminal prompt style)
         ctx.strokeStyle = '#00F5FF';
         ctx.lineWidth = 3;
         ctx.beginPath();
-        ctx.moveTo(0, this.canvas.height - 32);
-        ctx.lineTo(this.canvas.width, this.canvas.height - 32);
+        ctx.moveTo(0, height - 32);
+        ctx.lineTo(width, height - 32);
         ctx.stroke();
         
         // Add Git branch indicator in ground
         ctx.fillStyle = '#00F5FF';
         ctx.font = 'bold 10px monospace';
         ctx.textAlign = 'left';
-        ctx.fillText('git@runner', 10, this.canvas.height - 12);
+        ctx.fillText('git@runner', 10, height - 12);
         
         ctx.fillStyle = '#B565FF';
-        ctx.fillText('(main)', 80, this.canvas.height - 12);
+        ctx.fillText('(main)', 80, height - 12);
         
         ctx.fillStyle = '#FFD700';
-        ctx.fillText('$', 130, this.canvas.height - 12);
+        ctx.fillText('$', 130, height - 12);
     }
     
     renderGitGraph(ctx, colors) {
         // Draw commit graph visualization
         ctx.save();
+        
+        const width = this.canvas.logicalWidth || this.canvas.width;
+        const height = this.canvas.logicalHeight || this.canvas.height;
         
         // Main branch line
         const mainY = 100;
@@ -524,7 +530,7 @@ class World {
         ctx.setLineDash([5, 5]);
         ctx.beginPath();
         ctx.moveTo(0, mainY);
-        ctx.lineTo(this.canvas.width, mainY);
+        ctx.lineTo(width, mainY);
         ctx.stroke();
         ctx.setLineDash([]);
         
@@ -533,12 +539,12 @@ class World {
         ctx.strokeStyle = 'rgba(181, 101, 255, 0.3)';
         ctx.beginPath();
         ctx.moveTo(0, branchY);
-        ctx.lineTo(this.canvas.width, branchY);
+        ctx.lineTo(width, branchY);
         ctx.stroke();
         
         // Draw commit nodes along branches
-        for (let i = 0; i < this.canvas.width; i += 80) {
-            const x = (i + this.bgLayers[0].offset * 0.5) % this.canvas.width;
+        for (let i = 0; i < width; i += 80) {
+            const x = (i + this.bgLayers[0].offset * 0.5) % width;
             
             // Main branch commit
             ctx.fillStyle = '#00F5FF';
@@ -577,8 +583,8 @@ class World {
         }
         
         // Add merge indicators
-        for (let i = 200; i < this.canvas.width; i += 240) {
-            const x = (i + this.bgLayers[1].offset * 0.3) % this.canvas.width;
+        for (let i = 200; i < width; i += 240) {
+            const x = (i + this.bgLayers[1].offset * 0.3) % width;
             
             // Draw merge arrow
             ctx.strokeStyle = 'rgba(255, 215, 0, 0.4)';
@@ -604,6 +610,8 @@ class World {
         // Floating Git commands in background
         ctx.save();
         
+        const width = this.canvas.logicalWidth || this.canvas.width;
+        
         const commands = [
             'git commit -m "feat"',
             'git push origin main',
@@ -618,7 +626,7 @@ class World {
         ctx.shadowBlur = 0;
         
         for (let i = 0; i < 5; i++) {
-            const x = (this.bgLayers[2].offset * 0.8 + i * 180) % this.canvas.width;
+            const x = (this.bgLayers[2].offset * 0.8 + i * 180) % width;
             const y = 300 + Math.sin(this.bgLayers[2].offset * 0.01 + i) * 30;
             
             const cmd = commands[i % commands.length];
