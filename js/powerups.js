@@ -123,7 +123,7 @@ class PowerUpManager {
         const type = types[Math.floor(Math.random() * types.length)];
         
         const x = worldDistance + 800; // Spawn ahead of player
-        const y = 250 + Math.random() * 100; // Random height
+        const y = 420 + Math.random() * 80; // Reachable height (ground at 568, jump ~120px)
         
         const powerup = new PowerUp(x, y, type);
         this.powerups.push(powerup);

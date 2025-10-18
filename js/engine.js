@@ -33,8 +33,6 @@ class GameEngine {
         this.maxCombo = 5;
         
         // Challenge state
-        this.challengeTimer = 15;
-        this.challengeMaxTime = 15;
         this.currentChallenge = null;
         
         // Input handling
@@ -44,8 +42,10 @@ class GameEngine {
         // Timing
         this.lastTime = 0;
         this.frameCount = 0;
-        this.fps = 0;
+        this.fps = 60;
         this.fpsTimer = 0;
+        this.lowFpsCount = 0; // Track consecutive low FPS frames
+        this.adaptiveQuality = true; // Enable adaptive quality
         
         // Achievement tracking
         this.achievementTracker = {
@@ -74,19 +74,52 @@ class GameEngine {
         this.canvas.style.height = `${maxHeight * scale}px`;
         this.bgCanvas.style.width = `${maxWidth * scale}px`;
         this.bgCanvas.style.height = `${maxHeight * scale}px`;
+        
+        // Optimize canvas rendering
+        const ctx = this.canvas.getContext('2d');
+        const bgCtx = this.bgCanvas.getContext('2d');
+        
+        // Performance hints for browsers
+        if (ctx && typeof ctx.imageSmoothingEnabled !== 'undefined') {
+            ctx.imageSmoothingEnabled = false; // Pixel art, no smoothing needed
+        }
+        if (bgCtx && typeof bgCtx.imageSmoothingEnabled !== 'undefined') {
+            bgCtx.imageSmoothingEnabled = false;
+        }
     }
 
     setupInput() {
         window.addEventListener('keydown', (e) => {
+            // CRITICAL FIX: Don't capture input if user is typing in a text field
+            const isTextInput = e.target.tagName === 'INPUT' || 
+                              e.target.tagName === 'TEXTAREA' ||
+                              e.target.isContentEditable;
+            
+            // If typing in text field, allow normal behavior
+            if (isTextInput) {
+                return; // Let the input work normally
+            }
+            
+            // Only capture for game controls when NOT in text input
             this.keys[e.code] = true;
             
-            // Prevent default for game controls
-            if (['Space', 'ArrowUp', 'ArrowDown', 'KeyW', 'KeyS'].includes(e.code)) {
+            // Prevent default ONLY for game controls when playing
+            if ((this.state === 'PLAYING' || this.state === 'PAUSED') && 
+                ['Space', 'ArrowUp', 'ArrowDown', 'KeyW', 'KeyS'].includes(e.code)) {
                 e.preventDefault();
             }
         });
         
         window.addEventListener('keyup', (e) => {
+            // Don't process keyup if in text input
+            const isTextInput = e.target.tagName === 'INPUT' || 
+                              e.target.tagName === 'TEXTAREA' ||
+                              e.target.isContentEditable;
+            
+            if (isTextInput) {
+                return;
+            }
+            
             this.keys[e.code] = false;
         });
         
@@ -202,13 +235,30 @@ class GameEngine {
         const deltaTime = Math.min((currentTime - this.lastTime) / 1000, 0.1);
         this.lastTime = currentTime;
         
-        // Update FPS counter
+        // Update FPS counter and adaptive quality
         this.frameCount++;
         this.fpsTimer += deltaTime;
         if (this.fpsTimer >= 1) {
             this.fps = this.frameCount;
             this.frameCount = 0;
             this.fpsTimer = 0;
+            
+            // Adaptive quality: reduce particles if FPS is low
+            if (this.adaptiveQuality) {
+                if (this.fps < 50) {
+                    this.lowFpsCount++;
+                    if (this.lowFpsCount > 2) {
+                        // Sustained low FPS - reduce particle count
+                        this.particles.maxParticles = Math.max(100, this.particles.maxParticles - 50);
+                    }
+                } else {
+                    this.lowFpsCount = 0;
+                    // Good FPS - restore particles gradually
+                    if (this.particles.maxParticles < 500) {
+                        this.particles.maxParticles = Math.min(500, this.particles.maxParticles + 10);
+                    }
+                }
+            }
         }
         
         // Update based on state
@@ -298,24 +348,8 @@ class GameEngine {
     }
 
     updateCheckpoint(deltaTime) {
-        this.challengeTimer -= deltaTime;
-        this.ui.updateTimer(this.challengeTimer);
-        
-        // Play timer tick sound when < 5 seconds
-        if (this.challengeTimer <= 5 && Math.floor(this.challengeTimer) !== Math.floor(this.challengeTimer + deltaTime)) {
-            this.audio.playTimerTick();
-        }
-        
-        // Timeout
-        if (this.challengeTimer <= 0) {
-            this.audio.playWrong();
-            this.loseLife();
-            this.ui.showFeedback(false, "Time's up! -1 Life");
-            
-            setTimeout(() => {
-                this.resumeFromCheckpoint();
-            }, 1500);
-        }
+        // No timeout - user can take as long as needed to learn
+        // Challenge modal stays open until they submit an answer
     }
 
     reachCheckpoint() {
@@ -323,10 +357,9 @@ class GameEngine {
         this.nextCheckpoint += this.checkpointInterval;
         this.audio.playCheckpoint();
         
-        // Show git challenge
+        // Show git challenge (no timer - unlimited time to learn!)
         this.state = 'CHECKPOINT';
         this.currentChallenge = this.gitChallenge.getNextChallenge(this.checkpoints);
-        this.challengeTimer = this.challengeMaxTime;
         this.ui.showChallenge(this.currentChallenge, this.checkpoints);
         this.ui.updateNextCheckpoint(this.nextCheckpoint);
         

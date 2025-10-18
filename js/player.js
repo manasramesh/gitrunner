@@ -8,10 +8,11 @@ class Player {
         this.velocityY = 0;
         this.velocityX = 0;
         
-        // Physics constants
-        this.gravity = 980;
-        this.jumpForce = -400;
-        this.groundY = 400;
+        // Physics constants - Optimized for playability
+        // Max jump height: 120px (can clear 100px obstacles with safety margin)
+        this.gravity = 960;
+        this.jumpForce = -480;
+        this.groundY = 568; // Canvas height (600) - player height (32) = 568
         this.isGrounded = false;
         this.canDoubleJump = false;
         
@@ -168,35 +169,102 @@ class Player {
             ctx.lineWidth = 3;
             ctx.globalAlpha = 0.6;
             ctx.beginPath();
-            ctx.arc(this.x + this.width / 2, this.y + this.height / 2, this.width / 2 + 10, 0, Math.PI * 2);
+            ctx.arc(this.x + this.width / 2, this.y + this.height / 2, this.width / 2 + 12, 0, Math.PI * 2);
             ctx.stroke();
             ctx.restore();
         }
         
-        // Draw player as colored rectangle with state indication
         ctx.save();
         
+        // GitHub Octocat-style character
+        const centerX = this.x + this.width / 2;
+        const centerY = this.y + this.height / 2;
+        
         // State-based colors
-        let color = '#00F5FF'; // Default running
-        if (this.state === 'jumping') color = '#B565FF';
-        if (this.state === 'sliding') color = '#FF006E';
-        if (this.state === 'dashing') color = '#FFD700';
+        let primaryColor = '#00F5FF';
+        let secondaryColor = '#0088cc';
+        if (this.state === 'jumping') {
+            primaryColor = '#B565FF';
+            secondaryColor = '#7B2CBF';
+        }
+        if (this.state === 'sliding') {
+            primaryColor = '#FF006E';
+            secondaryColor = '#CC0058';
+        }
+        if (this.state === 'dashing') {
+            primaryColor = '#FFD700';
+            secondaryColor = '#FFA500';
+        }
         
-        // Main body
-        ctx.fillStyle = color;
-        ctx.fillRect(this.x, this.y, this.width, this.height);
+        // Draw Octocat-inspired character
+        ctx.fillStyle = primaryColor;
+        ctx.shadowColor = primaryColor;
+        ctx.shadowBlur = 15;
         
-        // Add detail (eyes/face)
-        ctx.fillStyle = '#fff';
-        ctx.fillRect(this.x + 8, this.y + 8, 6, 6);
-        ctx.fillRect(this.x + 18, this.y + 8, 6, 6);
+        // Main body (rounded)
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, 14, 0, Math.PI * 2);
+        ctx.fill();
         
-        // Glow effect
-        ctx.shadowColor = color;
+        // Cat ears (tentacles)
+        ctx.fillStyle = secondaryColor;
         ctx.shadowBlur = 10;
-        ctx.strokeStyle = '#fff';
+        
+        // Left ear
+        ctx.beginPath();
+        ctx.arc(centerX - 10, centerY - 10, 5, 0, Math.PI * 2);
+        ctx.fill();
+        
+        // Right ear
+        ctx.beginPath();
+        ctx.arc(centerX + 10, centerY - 10, 5, 0, Math.PI * 2);
+        ctx.fill();
+        
+        // Eyes (GitHub style)
+        ctx.fillStyle = '#FFFFFF';
+        ctx.shadowBlur = 0;
+        
+        // Left eye
+        ctx.beginPath();
+        ctx.arc(centerX - 5, centerY - 2, 3, 0, Math.PI * 2);
+        ctx.fill();
+        
+        // Right eye
+        ctx.beginPath();
+        ctx.arc(centerX + 5, centerY - 2, 3, 0, Math.PI * 2);
+        ctx.fill();
+        
+        // Pupils
+        ctx.fillStyle = '#000000';
+        ctx.beginPath();
+        ctx.arc(centerX - 5, centerY - 2, 1.5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(centerX + 5, centerY - 2, 1.5, 0, Math.PI * 2);
+        ctx.fill();
+        
+        // Smile
+        ctx.strokeStyle = '#000000';
         ctx.lineWidth = 2;
-        ctx.strokeRect(this.x, this.y, this.width, this.height);
+        ctx.beginPath();
+        ctx.arc(centerX, centerY + 2, 6, 0.2 * Math.PI, 0.8 * Math.PI);
+        ctx.stroke();
+        
+        // Git logo on body
+        ctx.fillStyle = '#000000';
+        ctx.font = 'bold 10px monospace';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('git', centerX, centerY + 10);
+        
+        // Outline
+        ctx.strokeStyle = '#FFFFFF';
+        ctx.lineWidth = 2;
+        ctx.shadowColor = primaryColor;
+        ctx.shadowBlur = 15;
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, 14, 0, Math.PI * 2);
+        ctx.stroke();
         
         ctx.restore();
     }

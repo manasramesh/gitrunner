@@ -58,7 +58,16 @@ class UIManager {
         });
         
         document.getElementById('command-input').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
+            if (e.key === 'Enter' || e.keyCode === 13) {
+                e.preventDefault(); // Prevent form submission
+                window.game.submitCommand();
+            }
+        });
+        
+        // Also handle keydown for better cross-browser compatibility
+        document.getElementById('command-input').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.keyCode === 13) {
+                e.preventDefault();
                 window.game.submitCommand();
             }
         });
@@ -174,8 +183,19 @@ class UIManager {
         this.checkpointNumEl.textContent = checkpointNumber;
         this.challengeScenarioEl.textContent = challenge.scenario;
         this.commandInput.value = '';
-        this.commandInput.focus();
+        
+        // Hide timer display (no time pressure for learning!)
+        const timerDisplay = this.challengeModal.querySelector('.timer-display');
+        if (timerDisplay) {
+            timerDisplay.style.display = 'none';
+        }
+        
         this.challengeModal.classList.remove('hidden');
+        
+        // Focus input after modal is visible
+        setTimeout(() => {
+            this.commandInput.focus();
+        }, 100);
     }
 
     hideChallenge() {
@@ -183,13 +203,8 @@ class UIManager {
     }
 
     updateTimer(seconds) {
-        this.timerEl.textContent = Math.ceil(seconds);
-        
-        if (seconds <= 5) {
-            this.timerEl.parentElement.classList.add('warning');
-        } else {
-            this.timerEl.parentElement.classList.remove('warning');
-        }
+        // Timer removed - no time pressure for learning!
+        // Keeping function for compatibility but doing nothing
     }
 
     showFeedback(isCorrect, message) {
