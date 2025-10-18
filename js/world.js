@@ -468,7 +468,7 @@ class World {
     }
 
     renderBackground(ctx) {
-        // GitHub themed biome colors (dark mode inspired)
+        // Git-themed background with commit graphs
         const biomeColors = {
             'cyber': ['#0d1117', '#161b22', '#21262d'],      // GitHub dark
             'forest': ['#0a3d2e', '#0d4a39', '#106548'],     // Green (commits)
@@ -477,36 +477,17 @@ class World {
         
         const colors = biomeColors[this.biomes[this.currentBiome]];
         
-        // Draw parallax layers
-        for (let i = 0; i < this.bgLayers.length; i++) {
-            const layer = this.bgLayers[i];
-            ctx.fillStyle = colors[i];
-            ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-            
-            // Add GitHub-style code dots/stars (representing commits)
-            ctx.fillStyle = 'rgba(0, 245, 255, 0.3)';
-            for (let j = 0; j < 20; j++) {
-                const x = (layer.offset + j * 40) % this.canvas.width;
-                const y = (j * 37) % (this.canvas.height - 100);
-                
-                // Draw as small circles (commit dots)
-                ctx.beginPath();
-                ctx.arc(x, y, 2, 0, Math.PI * 2);
-                ctx.fill();
-                
-                // Occasional git branch line
-                if (j % 5 === 0) {
-                    ctx.strokeStyle = 'rgba(181, 101, 255, 0.2)';
-                    ctx.lineWidth = 1;
-                    ctx.beginPath();
-                    ctx.moveTo(x, y);
-                    ctx.lineTo(x + 30, y - 15);
-                    ctx.stroke();
-                }
-            }
-        }
+        // Draw base background
+        ctx.fillStyle = colors[0];
+        ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
         
-        // Draw ground (code terminal style)
+        // Draw Git commit graph in background
+        this.renderGitGraph(ctx, colors);
+        
+        // Add floating Git commands
+        this.renderFloatingCommands(ctx);
+        
+        // Draw ground (terminal style with Git prompt)
         ctx.fillStyle = '#0a0a0a';
         ctx.fillRect(0, this.canvas.height - 32, this.canvas.width, 32);
         
@@ -518,12 +499,141 @@ class World {
         ctx.lineTo(this.canvas.width, this.canvas.height - 32);
         ctx.stroke();
         
-        // Add terminal prompt symbols
+        // Add Git branch indicator in ground
         ctx.fillStyle = '#00F5FF';
-        ctx.font = 'bold 12px monospace';
-        for (let i = 0; i < this.canvas.width; i += 100) {
-            ctx.fillText('$', i + 10, this.canvas.height - 10);
+        ctx.font = 'bold 10px monospace';
+        ctx.textAlign = 'left';
+        ctx.fillText('git@runner', 10, this.canvas.height - 12);
+        
+        ctx.fillStyle = '#B565FF';
+        ctx.fillText('(main)', 80, this.canvas.height - 12);
+        
+        ctx.fillStyle = '#FFD700';
+        ctx.fillText('$', 130, this.canvas.height - 12);
+    }
+    
+    renderGitGraph(ctx, colors) {
+        // Draw commit graph visualization
+        ctx.save();
+        
+        // Main branch line
+        const mainY = 100;
+        ctx.strokeStyle = 'rgba(0, 245, 255, 0.3)';
+        ctx.lineWidth = 2;
+        ctx.setLineDash([5, 5]);
+        ctx.beginPath();
+        ctx.moveTo(0, mainY);
+        ctx.lineTo(this.canvas.width, mainY);
+        ctx.stroke();
+        ctx.setLineDash([]);
+        
+        // Feature branches
+        const branchY = 200;
+        ctx.strokeStyle = 'rgba(181, 101, 255, 0.3)';
+        ctx.beginPath();
+        ctx.moveTo(0, branchY);
+        ctx.lineTo(this.canvas.width, branchY);
+        ctx.stroke();
+        
+        // Draw commit nodes along branches
+        for (let i = 0; i < this.canvas.width; i += 80) {
+            const x = (i + this.bgLayers[0].offset * 0.5) % this.canvas.width;
+            
+            // Main branch commit
+            ctx.fillStyle = '#00F5FF';
+            ctx.shadowColor = '#00F5FF';
+            ctx.shadowBlur = 10;
+            ctx.beginPath();
+            ctx.arc(x, mainY, 4, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Commit hash label
+            ctx.shadowBlur = 0;
+            ctx.fillStyle = 'rgba(0, 245, 255, 0.5)';
+            ctx.font = '8px monospace';
+            ctx.textAlign = 'center';
+            const hash = Math.random().toString(16).substr(2, 7);
+            ctx.fillText(hash, x, mainY - 10);
+            
+            // Feature branch commit (less frequent)
+            if (i % 160 === 0) {
+                ctx.fillStyle = '#B565FF';
+                ctx.shadowColor = '#B565FF';
+                ctx.shadowBlur = 10;
+                ctx.beginPath();
+                ctx.arc(x, branchY, 4, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Branch line connecting to main
+                ctx.shadowBlur = 0;
+                ctx.strokeStyle = 'rgba(181, 101, 255, 0.2)';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(x, mainY);
+                ctx.lineTo(x, branchY);
+                ctx.stroke();
+            }
         }
+        
+        // Add merge indicators
+        for (let i = 200; i < this.canvas.width; i += 240) {
+            const x = (i + this.bgLayers[1].offset * 0.3) % this.canvas.width;
+            
+            // Draw merge arrow
+            ctx.strokeStyle = 'rgba(255, 215, 0, 0.4)';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(x, branchY);
+            ctx.lineTo(x + 20, mainY);
+            ctx.stroke();
+            
+            // Arrow head
+            ctx.fillStyle = 'rgba(255, 215, 0, 0.4)';
+            ctx.beginPath();
+            ctx.moveTo(x + 20, mainY);
+            ctx.lineTo(x + 15, mainY + 5);
+            ctx.lineTo(x + 20, mainY + 3);
+            ctx.fill();
+        }
+        
+        ctx.restore();
+    }
+    
+    renderFloatingCommands(ctx) {
+        // Floating Git commands in background
+        ctx.save();
+        
+        const commands = [
+            'git commit -m "feat"',
+            'git push origin main',
+            'git pull',
+            'git merge',
+            'git checkout',
+            'git branch',
+            'git log'
+        ];
+        
+        ctx.font = '10px monospace';
+        ctx.shadowBlur = 0;
+        
+        for (let i = 0; i < 5; i++) {
+            const x = (this.bgLayers[2].offset * 0.8 + i * 180) % this.canvas.width;
+            const y = 300 + Math.sin(this.bgLayers[2].offset * 0.01 + i) * 30;
+            
+            const cmd = commands[i % commands.length];
+            
+            // Command background
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
+            const textWidth = ctx.measureText(cmd).width;
+            ctx.fillRect(x - 5, y - 12, textWidth + 10, 16);
+            
+            // Command text
+            ctx.fillStyle = 'rgba(0, 245, 255, 0.4)';
+            ctx.textAlign = 'left';
+            ctx.fillText(cmd, x, y);
+        }
+        
+        ctx.restore();
     }
 
     render(ctx) {
