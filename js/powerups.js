@@ -88,13 +88,13 @@ class PowerUpManager {
         this.lastSpawnX = 0;
     }
 
-    update(deltaTime, scrollSpeed, worldDistance) {
+    update(deltaTime, scrollSpeed, worldDistance, canvasHeight) {
         // Update spawn timer
         this.spawnTimer += deltaTime;
         
         // Spawn new power-ups
         if (this.spawnTimer >= this.spawnInterval && worldDistance - this.lastSpawnX > this.minSpawnDistance) {
-            this.spawnPowerUp(worldDistance);
+            this.spawnPowerUp(worldDistance, canvasHeight);
             this.spawnTimer = 0;
             this.spawnInterval = 5 + Math.random() * 3; // Random interval 5-8 seconds
         }
@@ -118,12 +118,13 @@ class PowerUpManager {
         }
     }
 
-    spawnPowerUp(worldDistance) {
+    spawnPowerUp(worldDistance, canvasHeight) {
         const types = ['shield', 'magnet', 'slowmo', 'multiplier'];
         const type = types[Math.floor(Math.random() * types.length)];
         
         const x = worldDistance + 800; // Spawn ahead of player
-        const y = 420 + Math.random() * 80; // Reachable height (ground at 568, jump ~120px)
+        const groundY = canvasHeight - 32;
+        const y = groundY - 100 - Math.random() * 50; // Reachable height (can jump ~120px)
         
         const powerup = new PowerUp(x, y, type);
         this.powerups.push(powerup);

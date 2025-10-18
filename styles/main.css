@@ -5,13 +5,19 @@
     box-sizing: border-box;
 }
 
-body {
+html, body {
+    margin: 0;
+    padding: 0;
     font-family: 'Press Start 2P', cursive;
     background: #0a0a0a;
     color: #fff;
     overflow: hidden;
     width: 100vw;
     height: 100vh;
+    position: fixed;
+    /* Prevent pull-to-refresh and overscroll on mobile */
+    overscroll-behavior: none;
+    touch-action: pan-x pan-y;
 }
 
 .pixel-text {
@@ -198,15 +204,16 @@ body {
     display: none;
 }
 
-/* Canvas */
+/* Canvas - Fullscreen */
 #background-canvas,
 #game-canvas {
     position: absolute;
     top: 60px;
-    left: 50%;
-    transform: translateX(-50%);
-    border: 3px solid #00F5FF;
-    box-shadow: 0 0 30px rgba(0, 245, 255, 0.5);
+    left: 0;
+    width: 100vw !important;
+    height: calc(100vh - 60px) !important;
+    border: none;
+    box-shadow: none;
 }
 
 #background-canvas {
@@ -312,11 +319,14 @@ body {
 /* Controls Hint */
 .controls-hint {
     position: absolute;
-    bottom: 20px;
+    bottom: 10px;
     left: 50%;
     transform: translateX(-50%);
-    color: rgba(255, 255, 255, 0.5);
+    color: rgba(255, 255, 255, 0.6);
     z-index: 10;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 8px 16px;
+    border-radius: 5px;
 }
 
 /* Modal Base */
@@ -550,47 +560,74 @@ body {
     }
 }
 
-/* Responsive Design */
+/* Responsive Design - Fullscreen on all devices */
 @media (max-width: 1024px) {
     .game-title {
-        font-size: 32px;
+        font-size: 28px;
     }
     
     .pixel-text {
-        font-size: 14px;
+        font-size: 12px;
     }
     
     .pixel-text-small {
         font-size: 8px;
     }
-    
-    #background-canvas,
-    #game-canvas {
-        max-width: 90%;
-    }
 }
 
 @media (max-width: 768px) {
     .game-title {
-        font-size: 24px;
+        font-size: 20px;
+    }
+    
+    .subtitle {
+        font-size: 10px;
     }
     
     #hud {
-        padding: 0 10px;
+        padding: 0 8px;
+        height: 50px;
     }
     
     .hud-left,
     .hud-right {
-        gap: 10px;
+        gap: 8px;
+    }
+    
+    .pixel-text-small {
+        font-size: 7px;
     }
     
     .menu-btn {
         padding: 10px 20px;
+        font-size: 8px;
     }
     
     .modal-content {
-        max-width: 90%;
-        padding: 20px;
+        max-width: 95%;
+        max-height: 90vh;
+        padding: 15px;
+    }
+    
+    .controls-hint {
+        font-size: 6px;
+        padding: 5px 10px;
+        bottom: 5px;
+    }
+}
+
+/* Landscape mobile optimization */
+@media (max-width: 896px) and (orientation: landscape) {
+    #hud {
+        height: 40px;
+    }
+    
+    .pixel-text-small {
+        font-size: 6px;
+    }
+    
+    .controls-hint {
+        display: none; /* Hide on landscape mobile to save space */
     }
 }
 

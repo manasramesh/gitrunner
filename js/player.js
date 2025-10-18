@@ -12,7 +12,7 @@ class Player {
         // Max jump height: 120px (can clear 100px obstacles with safety margin)
         this.gravity = 960;
         this.jumpForce = -480;
-        this.groundY = 568; // Canvas height (600) - player height (32) = 568
+        this.groundY = y; // Dynamic based on canvas height
         this.isGrounded = false;
         this.canDoubleJump = false;
         

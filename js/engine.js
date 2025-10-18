@@ -17,7 +17,10 @@ class GameEngine {
         this.gitChallenge = new GitChallengeSystem();
         this.powerupManager = new PowerUpManager();
         this.world = new World(this.canvas);
-        this.player = new Player(100, 568); // Correct ground position
+        
+        // Player initialized after canvas resize (dynamic ground position)
+        const groundY = this.canvas.height - 32;
+        this.player = new Player(100, groundY);
         this.ui = new UIManager(this.gitChallenge);
         
         // Game state
@@ -57,23 +60,33 @@ class GameEngine {
     }
 
     resizeCanvas() {
-        const maxWidth = 800;
-        const maxHeight = 600;
-        const scale = Math.min(
-            (window.innerWidth - 40) / maxWidth,
-            (window.innerHeight - 100) / maxHeight,
-            1
-        );
+        // Fullscreen canvas - fills entire viewport
+        const width = window.innerWidth;
+        const height = window.innerHeight - 60; // Reserve 60px for HUD
         
-        this.canvas.width = maxWidth;
-        this.canvas.height = maxHeight;
-        this.bgCanvas.width = maxWidth;
-        this.bgCanvas.height = maxHeight;
+        this.canvas.width = width;
+        this.canvas.height = height;
+        this.bgCanvas.width = width;
+        this.bgCanvas.height = height;
         
-        this.canvas.style.width = `${maxWidth * scale}px`;
-        this.canvas.style.height = `${maxHeight * scale}px`;
-        this.bgCanvas.style.width = `${maxWidth * scale}px`;
-        this.bgCanvas.style.height = `${maxHeight * scale}px`;
+        this.canvas.style.width = `${width}px`;
+        this.canvas.style.height = `${height}px`;
+        this.bgCanvas.style.width = `${width}px`;
+        this.bgCanvas.style.height = `${height}px`;
+        
+        // Update game dimensions
+        if (this.world) {
+            this.world.canvas = this.canvas;
+        }
+        
+        // Update player ground position based on new canvas height
+        if (this.player) {
+            this.player.groundY = height - 32;
+            // If player is on ground, update Y position
+            if (this.player.isGrounded) {
+                this.player.y = this.player.groundY;
+            }
+        }
         
         // Optimize canvas rendering
         const ctx = this.canvas.getContext('2d');
@@ -184,7 +197,12 @@ class GameEngine {
         this.nextCheckpoint = 500;
         this.coins = 0;
         this.combo = 0;
-        this.player.reset(100, 568); // Correct ground position
+        
+        // Dynamic ground position based on canvas height
+        const groundY = this.canvas.height - 32;
+        this.player.reset(100, groundY);
+        this.player.groundY = groundY;
+        
         this.world.reset();
         this.powerupManager.reset();
         this.particles.clear();
@@ -289,7 +307,7 @@ class GameEngine {
         // Update game systems
         this.player.update(deltaTime);
         this.world.update(deltaTime, this.checkpoints);
-        this.powerupManager.update(deltaTime, this.world.scrollSpeed, this.world.distance);
+        this.powerupManager.update(deltaTime, this.world.scrollSpeed, this.world.distance, this.canvas.height);
         this.particles.update(deltaTime);
         this.screenShake.update(deltaTime);
         
@@ -437,7 +455,8 @@ class GameEngine {
         if (this.lives > 0) {
             // Brief invincibility and reset position
             this.powerupManager.activatePowerUp('shield');
-            this.player.reset(100, 568); // Correct ground position
+            const groundY = this.canvas.height - 32;
+            this.player.reset(100, groundY);
         }
     }
 

@@ -443,10 +443,11 @@ class World {
     }
 
     spawnCoins(x) {
-        // Spawn coin patterns at reachable heights
+        // Spawn coin patterns at reachable heights (dynamic based on canvas)
         const coinCount = 3 + Math.floor(Math.random() * 3);
         const pattern = Math.random();
-        const baseY = 450; // Reachable height (ground at 568, player can jump ~120px up)
+        const groundY = this.canvas.height - 32;
+        const baseY = groundY - 120; // Player can jump ~120px up
         
         if (pattern < 0.5) {
             // Line pattern
