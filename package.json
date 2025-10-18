@@ -1,0 +1,42 @@
+{
+  "name": "git-runner-command-quest",
+  "version": "1.0.0",
+  "description": "An addictive 2D endless runner game that teaches Git commands through gameplay",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx http-server -p 8000 -o",
+    "dev": "npx http-server -p 8000 -o",
+    "test": "echo \"Open index.html in your browser to test\" && exit 0",
+    "deploy:surge": "npx surge . git-runner.surge.sh",
+    "deploy:vercel": "npx vercel --prod",
+    "lint": "echo \"No build step required - pure vanilla JS!\" && exit 0"
+  },
+  "keywords": [
+    "game",
+    "educational",
+    "git",
+    "endless-runner",
+    "html5-game",
+    "canvas",
+    "javascript",
+    "learning",
+    "tutorial",
+    "interactive"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/YOUR_USERNAME/git-runner.git"
+  },
+  "bugs": {
+    "url": "https://github.com/YOUR_USERNAME/git-runner/issues"
+  },
+  "homepage": "https://github.com/YOUR_USERNAME/git-runner#readme",
+  "devDependencies": {},
+  "dependencies": {},
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
+

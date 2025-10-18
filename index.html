@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="Git Runner: Command Quest - Learn Git commands while playing an addictive endless runner game!">
+    <title>Git Runner: Command Quest</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/terminal.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="screen">
+        <div class="loading-content">
+            <div class="git-logo">
+                <svg width="100" height="100" viewBox="0 0 100 100">
+                    <path d="M50 10 L90 30 L90 70 L50 90 L10 70 L10 30 Z" class="git-shape"/>
+                </svg>
+            </div>
+            <h1 class="pixel-text">Git Runner</h1>
+            <div class="loading-bar">
+                <div class="loading-fill"></div>
+            </div>
+            <p class="pixel-text-small">Loading...</p>
+        </div>
+    </div>
+
+    <!-- Main Menu -->
+    <div id="menu-screen" class="screen hidden">
+        <div class="menu-content">
+            <h1 class="game-title pixel-text">GIT RUNNER</h1>
+            <p class="subtitle pixel-text-small">Command Quest</p>
+            <div class="menu-buttons">
+                <button id="start-btn" class="menu-btn pixel-text-small">Start Game</button>
+                <button id="cheatsheet-menu-btn" class="menu-btn pixel-text-small">Git Cheat Sheet</button>
+                <button id="instructions-btn" class="menu-btn pixel-text-small">How to Play</button>
+            </div>
+            <div class="high-score pixel-text-small">
+                Best Score: <span id="menu-high-score">0</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Container -->
+    <div id="game-container" class="hidden">
+        <!-- HUD -->
+        <div id="hud">
+            <div class="hud-left">
+                <div class="score-display pixel-text-small">
+                    Score: <span id="score">0</span>
+                </div>
+                <div class="checkpoint-display pixel-text-small">
+                    Next: <span id="next-checkpoint">500</span>
+                </div>
+            </div>
+            <div class="hud-center">
+                <div id="lives-display" class="lives-display">
+                    <span class="heart">❤️</span>
+                    <span class="heart">❤️</span>
+                    <span class="heart">❤️</span>
+                </div>
+            </div>
+            <div class="hud-right">
+                <div class="high-score-display pixel-text-small">
+                    Best: <span id="high-score">0</span>
+                </div>
+                <button id="pause-btn" class="icon-btn">⏸</button>
+            </div>
+        </div>
+
+        <!-- Power-up indicator -->
+        <div id="powerup-indicator" class="powerup-indicator hidden pixel-text-small"></div>
+
+        <!-- Canvas Layers -->
+        <canvas id="background-canvas"></canvas>
+        <canvas id="game-canvas"></canvas>
+        
+        <!-- Controls hint -->
+        <div id="controls-hint" class="controls-hint pixel-text-small">
+            SPACE: Jump  |  ↓: Slide  |  2×SPACE: Dash
+        </div>
+    </div>
+
+    <!-- Git Challenge Modal -->
+    <div id="challenge-modal" class="modal hidden">
+        <div class="modal-content terminal-window">
+            <div class="terminal-header">
+                <span class="terminal-title">$ Git Challenge</span>
+                <div class="terminal-buttons">
+                    <span class="terminal-btn close"></span>
+                    <span class="terminal-btn minimize"></span>
+                    <span class="terminal-btn maximize"></span>
+                </div>
+            </div>
+            <div class="terminal-body">
+                <div class="challenge-info">
+                    <div class="checkpoint-number pixel-text-small">Checkpoint <span id="checkpoint-num">1</span></div>
+                    <div class="timer-display pixel-text">
+                        <span id="timer">15</span>s
+                    </div>
+                </div>
+                <div class="challenge-scenario pixel-text-small" id="challenge-scenario">
+                    You want to initialize a new Git repository...
+                </div>
+                <div class="terminal-input-wrapper">
+                    <span class="terminal-prompt">$</span>
+                    <input 
+                        type="text" 
+                        id="command-input" 
+                        class="terminal-input pixel-text-small" 
+                        placeholder="Type git command here..."
+                        autocomplete="off"
+                        spellcheck="false">
+                </div>
+                <button id="submit-command" class="terminal-btn-submit pixel-text-small">Execute</button>
+                <button id="cheatsheet-btn" class="terminal-btn-help pixel-text-small">📖 Git Cheat Sheet</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Git Cheat Sheet Modal -->
+    <div id="cheatsheet-modal" class="modal hidden">
+        <div class="modal-content cheatsheet-content">
+            <div class="modal-header">
+                <h2 class="pixel-text-small">Git Cheat Sheet</h2>
+                <button class="close-btn" id="close-cheatsheet">×</button>
+            </div>
+            <div class="cheatsheet-search">
+                <input type="text" id="cheatsheet-search" class="pixel-text-small" placeholder="Search commands...">
+            </div>
+            <div class="cheatsheet-body" id="cheatsheet-body">
+                <!-- Generated dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Instructions Modal -->
+    <div id="instructions-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="pixel-text-small">How to Play</h2>
+                <button class="close-btn" id="close-instructions">×</button>
+            </div>
+            <div class="instructions-body pixel-text-small">
+                <h3>Gameplay</h3>
+                <p>Run automatically, avoid obstacles, collect coins!</p>
+                <ul>
+                    <li><strong>SPACE / ↑</strong> - Jump</li>
+                    <li><strong>↓</strong> - Slide under obstacles</li>
+                    <li><strong>Double-tap SPACE</strong> - Dash forward</li>
+                </ul>
+                
+                <h3>Git Challenges</h3>
+                <p>Every 500-1000 points, you'll face a Git challenge!</p>
+                <ul>
+                    <li>Type the correct Git command within 15 seconds</li>
+                    <li>Wrong answer or timeout = lose 1 life ❤️</li>
+                    <li>You have 3 lives - lose all = Game Over!</li>
+                    <li>Use the Cheat Sheet button during challenges</li>
+                </ul>
+
+                <h3>Power-ups</h3>
+                <p>⚡ Shield | 🧲 Magnet | ⏰ Slow-Mo | ✨ 2x Points</p>
+
+                <h3>Goal</h3>
+                <p>Get the highest score while mastering Git commands!</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pause Modal -->
+    <div id="pause-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="pixel-text">Game Paused</h2>
+            </div>
+            <div class="pause-body">
+                <button id="resume-btn" class="menu-btn pixel-text-small">Resume</button>
+                <button id="restart-btn" class="menu-btn pixel-text-small">Restart</button>
+                <button id="quit-btn" class="menu-btn pixel-text-small">Quit to Menu</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Over Modal -->
+    <div id="gameover-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="pixel-text">Game Over!</h2>
+            </div>
+            <div class="gameover-body">
+                <div class="final-score pixel-text">
+                    Score: <span id="final-score">0</span>
+                </div>
+                <div id="new-record" class="new-record pixel-text-small hidden">🏆 NEW RECORD! 🏆</div>
+                <div class="stats pixel-text-small">
+                    <p>Checkpoints: <span id="checkpoints-completed">0</span></p>
+                    <p>Coins: <span id="coins-collected">0</span></p>
+                    <p>Git Challenges: <span id="challenges-correct">0</span>/<span id="challenges-total">0</span></p>
+                </div>
+                <button id="play-again-btn" class="menu-btn pixel-text-small">Play Again</button>
+                <button id="menu-btn" class="menu-btn pixel-text-small">Main Menu</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Achievement Toast -->
+    <div id="achievement-toast" class="achievement-toast hidden">
+        <div class="achievement-content pixel-text-small">
+            <span class="achievement-icon">🏆</span>
+            <span class="achievement-text"></span>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/particles.js"></script>
+    <script src="js/audio.js"></script>
+    <script src="js/gitChallenge.js"></script>
+    <script src="js/powerups.js"></script>
+    <script src="js/player.js"></script>
+    <script src="js/world.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/engine.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
+
